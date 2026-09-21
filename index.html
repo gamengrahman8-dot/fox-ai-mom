@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>FOX AI</title>
+
+<style>
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    -webkit-tap-highlight-color:transparent;
+}
+
+:root{
+    --bg:#080808;
+    --panel:#111111;
+    --panel2:#171717;
+    --border:rgba(255,255,255,.08);
+    --orange:#ff6a00;
+    --orange2:#ff8a2b;
+    --text:#f5f5f5;
+    --muted:#8c8c8c;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:var(--bg);
+    color:var(--text);
+    font-family:Tahoma,Arial,sans-serif;
+}
+
+button,input,textarea{
+    font-family:inherit;
+}
+
+button{
+    border:0;
+    cursor:pointer;
+}
+
+.app{
+    width:100%;
+    height:100dvh;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    background:
+        radial-gradient(circle at 50% -20%,rgba(255,106,0,.13),transparent 35%),
+        var(--bg);
+}
+
+/* HEADER */
+
+.header{
+    height:64px;
+    min-height:64px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 13px;
+    border-bottom:1px solid var(--border);
+    background:rgba(8,8,8,.82);
+    backdrop-filter:blur(18px);
+    position:relative;
+    z-index:10;
+}
+
+.header-btn{
+    width:43px;
+    height:43px;
+    border-radius:14px;
+    background:#151515;
+    color:#fff;
+    border:1px solid var(--border);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:25px;
+    transition:.18s;
+}
+
+.header-btn:active{
+    transform:scale(.91);
+    background:#202020;
+}
+
+.logo{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    font-size:19px;
+    font-weight:800;
+    letter-spacing:1px;
+}
+
+.logo span{
+    color:var(--orange);
+}
+
+/* CHAT */
+
+.chat{
+    flex:1;
+    overflow-y:auto;
+    padding:20px 13px 150px;
+    scroll-behavior:smooth;
+}
+
+.chat::-webkit-scrollbar{
+    width:0;
+}
+
+.welcome{
+    min-height:70vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:30px;
+}
+
+.fox-logo{
+    width:76px;
+    height:76px;
+    border-radius:25px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:34px;
+    font-weight:900;
+    color:#fff;
+    background:
+        linear-gradient(145deg,#ff8a2b,#e94f00);
+    box-shadow:0 15px 45px rgba(255,106,0,.22);
+    margin-bottom:20px;
+}
+
+.welcome h1{
+    font-size:27px;
+    margin-bottom:10px;
+}
+
+.welcome h1 span{
+    color:var(--orange);
+}
+
+.welcome p{
+    color:var(--muted);
+    line-height:1.9;
+    font-size:14px;
+    max-width:330px;
+}
+
+.message{
+    width:100%;
+    display:flex;
+    margin:12px 0;
+}
+
+.message.user{
+    justify-content:flex-start;
+}
+
+.message.ai{
+    justify-content:flex-end;
+}
+
+.bubble{
+    max-width:88%;
+    line-height:1.9;
+    font-size:15px;
+    white-space:pre-wrap;
+    word-break:break-word;
+}
+
+.user .bubble{
+    background:linear-gradient(135deg,#ff7008,#e95700);
+    color:#fff;
+    border-radius:20px 20px 5px 20px;
+    padding:11px 14px;
+}
+
+.ai .bubble{
+    color:#eeeeee;
+    padding:5px 2px;
+    text-align:right;
+}
+
+.ai-actions{
+    display:flex;
+    gap:7px;
+    margin-top:8px;
+    direction:rtl;
+}
+
+.action-btn{
+    background:#151515;
+    color:#aaa;
+    border:1px solid var(--border);
+    padding:6px 10px;
+    border-radius:9px;
+    font-size:11px;
+}
+
+.action-btn:active{
+    transform:scale(.95);
+}
+
+/* CODE */
+
+.code-wrap{
+    margin:12px 0;
+    background:#0d0d0d;
+    border:1px solid #252525;
+    border-radius:13px;
+    overflow:hidden;
+    direction:ltr;
+}
+
+.code-head{
+    height:38px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 10px;
+    background:#151515;
+    color:#888;
+    font-size:11px;
+}
+
+.code-copy{
+    background:#222;
+    color:#ddd;
+    padding:5px 9px;
+    border-radius:7px;
+    font-size:10px;
+}
+
+.code{
+    padding:13px;
+    overflow-x:auto;
+    white-space:pre;
+    color:#e8e8e8;
+    font-family:Consolas,monospace;
+    font-size:12px;
+    line-height:1.65;
+}
+
+/* ATTACHMENT PREVIEW */
+
+.attachments{
+    display:flex;
+    gap:8px;
+    overflow-x:auto;
+    padding:5px 2px 9px;
+}
+
+.attachments:empty{
+    display:none;
+}
+
+.attach-item{
+    min-width:65px;
+    height:65px;
+    border-radius:12px;
+    overflow:hidden;
+    position:relative;
+    background:#1b1b1b;
+    border:1px solid var(--border);
+}
+
+.attach-item img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.file-preview{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#aaa;
+    font-size:10px;
+    padding:5px;
+    text-align:center;
+}
+
+.remove-file{
+    position:absolute;
+    top:3px;
+    right:3px;
+    width:20px;
+    height:20px;
+    border-radius:50%;
+    background:#000b;
+    color:#fff;
+    font-size:13px;
+}
+
+/* COMPOSER */
+
+.composer-area{
+    position:absolute;
+    bottom:0;
+    left:0;
+    right:0;
+    padding:9px 11px calc(9px + env(safe-area-inset-bottom));
+    background:linear-gradient(transparent,#080808 22%);
+    z-index:9;
+}
+
+.composer{
+    width:100%;
+    min-height:58px;
+    border:1px solid #292929;
+    border-radius:20px;
+    background:#111;
+    display:flex;
+    align-items:flex-end;
+    padding:8px;
+    gap:7px;
+    box-shadow:0 -5px 35px rgba(0,0,0,.35);
+}
+
+.input{
+    flex:1;
+    resize:none;
+    border:0;
+    outline:0;
+    background:transparent;
+    color:#fff;
+    min-height:40px;
+    max-height:130px;
+    padding:9px 6px;
+    font-size:14px;
+    line-height:1.7;
+}
+
+.input::placeholder{
+    color:#666;
+}
+
+.send,.attach{
+    flex:0 0 42px;
+    width:42px;
+    height:42px;
+    border-radius:14px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+}
+
+.attach{
+    background:#1d1d1d;
+    color:#ddd;
+}
+
+.send{
+    background:var(--orange);
+    color:#fff;
+}
+
+.send:active,.attach:active{
+    transform:scale(.91);
+}
+
+/* DRAWER */
+
+.overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.58);
+    backdrop-filter:blur(4px);
+    opacity:0;
+    pointer-events:none;
+    transition:.22s;
+    z-index:30;
+}
+
+.overlay.open{
+    opacity:1;
+    pointer-events:auto;
+}
+
+.drawer{
+    position:fixed;
+    top:0;
+    right:0;
+    width:min(86%,360px);
+    height:100dvh;
+    background:#101010;
+    border-left:1px solid var(--border);
+    transform:translateX(105%);
+    transition:.25s;
+    z-index:31;
+    display:flex;
+    flex-direction:column;
+    box-shadow:-15px 0 50px #0008;
+}
+
+.drawer.open{
+    transform:translateX(0);
+}
+
+.drawer-head{
+    padding:18px 15px;
+    border-bottom:1px solid var(--border);
+}
+
+.drawer-title{
+    font-size:20px;
+    font-weight:800;
+    margin-bottom:13px;
+}
+
+.search{
+    width:100%;
+    height:43px;
+    border-radius:13px;
+    border:1px solid var(--border);
+    outline:0;
+    background:#181818;
+    color:#fff;
+    padding:0 12px;
+}
+
+.history{
+    flex:1;
+    overflow-y:auto;
+    padding:10px;
+}
+
+.history-item{
+    padding:12px;
+    border-radius:12px;
+    margin-bottom:7px;
+    background:#161616;
+    border:1px solid transparent;
+    cursor:pointer;
+}
+
+.history-item:active{
+    transform:scale(.98);
+}
+
+.history-name{
+    font-size:13px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.history-date{
+    color:#666;
+    font-size:10px;
+    margin-top:5px;
+}
+
+.history-empty{
+    color:#666;
+    text-align:center;
+    padding:30px 10px;
+    font-size:13px;
+}
+
+.drawer-bottom{
+    padding:12px;
+    border-top:1px solid var(--border);
+}
+
+.clear-btn{
+    width:100%;
+    height:45px;
+    border-radius:13px;
+    background:#1c1c1c;
+    color:#ff6a00;
+    border:1px solid rgba(255,106,0,.18);
+}
+
+/* SETTINGS */
+
+.settings{
+    position:fixed;
+    inset:0;
+    z-index:40;
+    background:#090909;
+    transform:translateY(100%);
+    transition:.25s;
+    display:flex;
+    flex-direction:column;
+}
+
+.settings.open{
+    transform:translateY(0);
+}
+
+.settings-head{
+    height:64px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:0 14px;
+    border-bottom:1px solid var(--border);
+}
+
+.settings-head h2{
+    font-size:18px;
+}
+
+.back{
+    width:40px;
+    height:40px;
+    border-radius:12px;
+    background:#171717;
+    color:#fff;
+    font-size:20px;
+}
+
+.settings-body{
+    padding:15px;
+    overflow-y:auto;
+}
+
+.setting-box{
+    background:#121212;
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:15px;
+    margin-bottom:12px;
+}
+
+.setting-title{
+    font-size:14px;
+    font-weight:bold;
+    margin-bottom:7px;
+}
+
+.setting-text{
+    color:#777;
+    font-size:12px;
+    line-height:1.8;
+}
+
+.status{
+    display:flex;
+    align-items:center;
+    gap:7px;
+    margin-top:10px;
+    font-size:12px;
+}
+
+.dot{
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#28c76f;
+}
+
+/* LOADING */
+
+.typing{
+    display:flex;
+    gap:5px;
+    align-items:center;
+    padding:8px 2px;
+}
+
+.typing i{
+    width:6px;
+    height:6px;
+    background:#777;
+    border-radius:50%;
+    animation:bounce 1s infinite;
+}
+
+.typing i:nth-child(2){animation-delay:.15s}
+.typing i:nth-child(3){animation-delay:.3s}
+
+@keyframes bounce{
+    0%,80%,100%{transform:translateY(0);opacity:.4}
+    40%{transform:translateY(-5px);opacity:1}
+}
+
+.hidden{
+    display:none!important;
+}
+
+/* DESKTOP */
+
+@media(min-width:700px){
+    .app{
+        max-width:760px;
+        margin:auto;
+        border-left:1px solid var(--border);
+        border-right:1px solid var(--border);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <header class="header">
+
+        <button class="header-btn" id="newChat" aria-label="چت جدید">+</button>
+
+        <div class="logo">
+            <span>FOX</span> AI
+        </div>
+
+        <button class="header-btn" id="menuBtn" aria-label="منو">
+            ☰
+        </button>
+
+    </header>
+
+    <main class="chat" id="chat">
+
+        <section class="welcome" id="welcome">
+            <div class="fox-logo">F</div>
+            <h1>سلام، من <span>FOX AI</span> هستم</h1>
+            <p>
+                سؤال بپرس، کد بنویس، متن بده یا تصویر و فایل ارسال کن.
+                من بر اساس درخواستت پاسخ می‌دهم.
+            </p>
+        </section>
+
+    </main>
+
+    <div class="composer-area">
+
+        <div class="attachments" id="attachments"></div>
+
+        <div class="composer">
+
+            <button class="attach" id="attachBtn" title="ارسال فایل">+</button>
+
+            <textarea
+                class="input"
+                id="input"
+                rows="1"
+                placeholder="پیامت را بنویس..."
+            ></textarea>
+
+            <button class="send" id="sendBtn" title="ارسال">➤</button>
+
+        </div>
+
+        <input
+            type="file"
+            id="fileInput"
+            class="hidden"
+            multiple
+            accept="image/*,.pdf,.txt,.json,.html,.css,.js,.py,.md"
+        >
+
+    </div>
+
+</div>
+
+
+<!-- DRAWER -->
+
+<div class="overlay" id="overlay"></div>
+
+<aside class="drawer" id="drawer">
+
+    <div class="drawer-head">
+
+        <div class="drawer-title">سابقه چت</div>
+
+        <input
+            class="search"
+            id="historySearch"
+            placeholder="جستجو در سابقه..."
+        >
+
+    </div>
+
+    <div class="history" id="history"></div>
+
+    <div class="drawer-bottom">
+
+        <button class="clear-btn" id="clearHistory">
+            پاک کردن همه سابقه‌ها
+        </button>
+
+    </div>
+
+</aside>
+
+
+<!-- SETTINGS -->
+
+<section class="settings" id="settings">
+
+    <div class="settings-head">
+
+        <button class="back" id="closeSettings">‹</button>
+
+        <h2>تنظیمات</h2>
+
+    </div>
+
+    <div class="settings-body">
+
+        <div class="setting-box">
+
+            <div class="setting-title">FOX AI</div>
+
+            <div class="setting-text">
+                دستیار هوش مصنوعی مبتنی بر Gemini.
+            </div>
+
+            <div class="status">
+                <span class="dot"></span>
+                سیستم آماده است
+            </div>
+
+        </div>
+
+        <div class="setting-box">
+
+            <div class="setting-title">مدل</div>
+
+            <div class="setting-text">
+                Gemini 3.6 Flash
+            </div>
+
+        </div>
+
+        <div class="setting-box">
+
+            <div class="setting-title">ذخیره‌سازی</div>
+
+            <div class="setting-text">
+                سابقه چت‌ها روی حافظه محلی همین دستگاه ذخیره می‌شود.
+            </div>
+
+        </div>
+
+        <div class="setting-box">
+
+            <div class="setting-title">نسخه</div>
+
+            <div class="setting-text">
+                FOX AI 1.0
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<script>
+
+/* =====================================================
+   FOX AI CONFIG
+   ===================================================== */
+
+const API_KEY = "AQ.Ab8RN6JOy4VVkhtG5KPQCnuzlDhhJjbcbVO8q_HytRYFkWbG6Q";
+
+const MODEL = "gemini-3.6-flash";
+
+const API_URL =
+`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${API_KEY}`;
+
+
+/* =====================================================
+   ELEMENTS
+   ===================================================== */
+
+const chat = document.getElementById("chat");
+const welcome = document.getElementById("welcome");
+
+const input = document.getElementById("input");
+const sendBtn = document.getElementById("sendBtn");
+
+const attachBtn = document.getElementById("attachBtn");
+const fileInput = document.getElementById("fileInput");
+
+const attachmentsBox = document.getElementById("attachments");
+
+const newChat = document.getElementById("newChat");
+const menuBtn = document.getElementById("menuBtn");
+
+const drawer = document.getElementById("drawer");
+const overlay = document.getElementById("overlay");
+
+const historyBox = document.getElementById("history");
+const historySearch = document.getElementById("historySearch");
+const clearHistory = document.getElementById("clearHistory");
+
+const settings = document.getElementById("settings");
+const closeSettings = document.getElementById("closeSettings");
+
+
+/* =====================================================
+   STATE
+   ===================================================== */
+
+let messages = [];
+let attachedFiles = [];
+let currentChatId = null;
+
+
+/* =====================================================
+   LOCAL STORAGE
+   ===================================================== */
+
+function getHistory(){
+
+    try{
+        return JSON.parse(
+            localStorage.getItem("fox_ai_history") || "[]"
+        );
+    }catch{
+        return [];
+    }
+
+}
+
+function saveHistory(){
+
+    if(!messages.length) return;
+
+    const history = getHistory();
+
+    const title =
+        messages.find(x => x.role === "user")?.text ||
+        "چت جدید";
+
+    const item = {
+        id: currentChatId || Date.now().toString(),
+        title: title.slice(0,70),
+        date: new Date().toLocaleString("fa-IR"),
+        messages: messages
+    };
+
+    currentChatId = item.id;
+
+    const index = history.findIndex(x => x.id === item.id);
+
+    if(index >= 0){
+        history[index] = item;
+    }else{
+        history.unshift(item);
+    }
+
+    localStorage.setItem(
+        "fox_ai_history",
+        JSON.stringify(history.slice(0,50))
+    );
+
+    renderHistory();
+}
+
+
+/* =====================================================
+   HISTORY UI
+   ===================================================== */
+
+function renderHistory(filter = ""){
+
+    const history = getHistory();
+
+    const filtered = history.filter(item =>
+        item.title.toLowerCase().includes(filter.toLowerCase())
+    );
+
+    historyBox.innerHTML = "";
+
+    if(!filtered.length){
+
+        historyBox.innerHTML =
+            `<div class="history-empty">هنوز سابقه‌ای وجود ندارد</div>`;
+
+        return;
+    }
+
+    filtered.forEach(item => {
+
+        const div = document.createElement("div");
+
+        div.className = "history-item";
+
+        div.innerHTML = `
+            <div class="history-name">
+                ${escapeHTML(item.title)}
+            </div>
+            <div class="history-date">
+                ${escapeHTML(item.date)}
+            </div>
+        `;
+
+        div.onclick = () => loadChat(item.id);
+
+        historyBox.appendChild(div);
+
+    });
+
+}
+
+
+function loadChat(id){
+
+    const history = getHistory();
+
+    const item = history.find(x => x.id === id);
+
+    if(!item) return;
+
+    currentChatId = item.id;
+
+    messages = item.messages || [];
+
+    closeDrawer();
+
+    renderMessages();
+
+}
+
+
+function deleteAllHistory(){
+
+    if(!confirm("همه سابقه چت‌ها پاک شود؟")) return;
+
+    localStorage.removeItem("fox_ai_history");
+
+    messages = [];
+
+    currentChatId = null;
+
+    renderHistory();
+
+    newConversation();
+
+}
+
+
+/* =====================================================
+   CHAT RENDER
+   ===================================================== */
+
+function renderMessages(){
+
+    chat.innerHTML = "";
+
+    if(!messages.length){
+
+        chat.appendChild(createWelcome());
+
+        return;
+    }
+
+    messages.forEach(msg => {
+
+        addMessageToUI(
+            msg.role,
+            msg.text,
+            false
+        );
+
+    });
+
+    scrollBottom();
+
+}
+
+
+function createWelcome(){
+
+    const section = document.createElement("section");
+
+    section.className = "welcome";
+
+    section.innerHTML = `
+        <div class="fox-logo">F</div>
+        <h1>سلام، من <span>FOX AI</span> هستم</h1>
+        <p>
+            سؤال بپرس، کد بنویس، متن بده یا تصویر و فایل ارسال کن.
+        </p>
+    `;
+
+    return section;
+}
+
+
+function addMessageToUI(role,text,scroll=true){
+
+    const wrapper = document.createElement("div");
+
+    wrapper.className =
+        "message " + (role === "user" ? "user" : "ai");
+
+    const bubble = document.createElement("div");
+
+    bubble.className = "bubble";
+
+    if(role === "ai"){
+
+        bubble.innerHTML = formatAI(text);
+
+        const actions = document.createElement("div");
+
+        actions.className = "ai-actions";
+
+        const copy = document.createElement("button");
+
+        copy.className = "action-btn";
+
+        copy.textContent = "کپی";
+
+        copy.onclick = () => {
+
+            navigator.clipboard.writeText(text);
+
+            copy.textContent = "کپی شد";
+
+            setTimeout(() => {
+                copy.textContent = "کپی";
+            },1200);
+
+        };
+
+        actions.appendChild(copy);
+
+        bubble.appendChild(actions);
+
+    }else{
+
+        bubble.textContent = text;
+
+    }
+
+    wrapper.appendChild(bubble);
+
+    chat.appendChild(wrapper);
+
+    if(scroll) scrollBottom();
+
+}
+
+
+/* =====================================================
+   AI MARKDOWN / CODE
+   ===================================================== */
+
+function formatAI(text){
+
+    let safe = escapeHTML(text);
+
+    const blocks = [];
+
+    safe = safe.replace(
+        /```([\w+-]*)\n?([\s\S]*?)```/g,
+        function(_,lang,code){
+
+            const id = "code_" + Math.random()
+                .toString(36)
+                .slice(2);
+
+            blocks.push({
+                id,
+                code:code
+            });
+
+            return `
+                <div class="code-wrap">
+                    <div class="code-head">
+                        <span>${lang || "code"}</span>
+                        <button
+                            class="code-copy"
+                            onclick="copyCode('${id}')"
+                        >
+                            کپی کد
+                        </button>
+                    </div>
+                    <pre class="code" id="${id}">${code}</pre>
+                </div>
+            `;
+
+        }
+    );
+
+    safe = safe.replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>");
+
+    safe = safe.replace(
+        /`([^`]+)`/g,
+        "<code>$1</code>"
+    );
+
+    safe = safe.replace(/\n/g,"<br>");
+
+    return safe;
+
+}
+
+
+window.copyCode = function(id){
+
+    const el = document.getElementById(id);
+
+    if(!el) return;
+
+    navigator.clipboard.writeText(el.textContent);
+
+};
+
+
+/* =====================================================
+   FILES
+   ===================================================== */
+
+attachBtn.onclick = () => fileInput.click();
+
+fileInput.onchange = async function(){
+
+    const files = Array.from(this.files || []);
+
+    for(const file of files){
+
+        if(attachedFiles.length >= 5) break;
+
+        const data = await readFile(file);
+
+        attachedFiles.push({
+            file,
+            data
+        });
+
+    }
+
+    renderAttachments();
+
+    fileInput.value = "";
+
+};
+
+
+function readFile(file){
+
+    return new Promise((resolve,reject) => {
+
+        const reader = new FileReader();
+
+        reader.onload = () => resolve(reader.result);
+
+        reader.onerror = reject;
+
+        reader.readAsDataURL(file);
+
+    });
+
+}
+
+
+function renderAttachments(){
+
+    attachmentsBox.innerHTML = "";
+
+    attachedFiles.forEach((item,index) => {
+
+        const div = document.createElement("div");
+
+        div.className = "attach-item";
+
+        if(item.file.type.startsWith("image/")){
+
+            div.innerHTML = `
+                <img src="${item.data}">
+                <button class="remove-file"
+                    onclick="removeAttachment(${index})">
+                    ×
+                </button>
+            `;
+
+        }else{
+
+            div.innerHTML = `
+                <div class="file-preview">
+                    ${escapeHTML(item.file.name)}
+                </div>
+                <button class="remove-file"
+                    onclick="removeAttachment(${index})">
+                    ×
+                </button>
+            `;
+
+        }
+
+        attachmentsBox.appendChild(div);
+
+    });
+
+}
+
+
+window.removeAttachment = function(index){
+
+    attachedFiles.splice(index,1);
+
+    renderAttachments();
+
+};
+
+
+/* =====================================================
+   SEND
+   ===================================================== */
+
+sendBtn.onclick = sendMessage;
+
+input.addEventListener("keydown",e => {
+
+    if(e.key === "Enter" && !e.shiftKey){
+
+        e.preventDefault();
+
+        sendMessage();
+
+    }
+
+});
+
+
+input.addEventListener("input",function(){
+
+    this.style.height = "auto";
+
+    this.style.height =
+        Math.min(this.scrollHeight,130) + "px";
+
+});
+
+
+async function sendMessage(){
+
+    const text = input.value.trim();
+
+    if(!text && !attachedFiles.length) return;
+
+    if(API_KEY === "YOUR_GEMINI_API_KEY"){
+
+        alert("ابتدا API Key خودت را در کد وارد کن.");
+
+        return;
+    }
+
+    if(!messages.length){
+
+        welcome?.remove();
+
+    }
+
+    const userText =
+        text ||
+        "لطفاً فایل‌های ارسال‌شده را بررسی کن.";
+
+    messages.push({
+        role:"user",
+        text:userText
+    });
+
+    addMessageToUI(
+        "user",
+        userText
+    );
+
+    input.value = "";
+
+    input.style.height = "40px";
+
+    const filesForRequest = [...attachedFiles];
+
+    attachedFiles = [];
+
+    renderAttachments();
+
+    const typing = addTyping();
+
+    sendBtn.disabled = true;
+
+    try{
+
+        const answer =
+            await callGemini(userText,filesForRequest);
+
+        typing.remove();
+
+        messages.push({
+            role:"ai",
+            text:answer
+        });
+
+        addMessageToUI(
+            "ai",
+            answer
+        );
+
+        saveHistory();
+
+    }catch(error){
+
+        typing.remove();
+
+        const errorText =
+            "خطا در اتصال به Gemini.\n\n" +
+            (error.message || "خطای نامشخص");
+
+        messages.push({
+            role:"ai",
+            text:errorText
+        });
+
+        addMessageToUI(
+            "ai",
+            errorText
+        );
+
+    }finally{
+
+        sendBtn.disabled = false;
+
+    }
+
+}
+
+
+/* =====================================================
+   GEMINI API
+   ===================================================== */
+
+async function callGemini(text,files){
+
+    const parts = [
+        {
+            text:
+            `تو دستیار هوش مصنوعی FOX AI هستی.
+به زبان کاربر پاسخ بده.
+پاسخ‌ها را واضح، مفید و حرفه‌ای ارائه کن.
+اگر کاربر درخواست کد کرد، کد را داخل code block قرار بده.
+
+درخواست کاربر:
+${text}`
+        }
+    ];
+
+
+    for(const item of files){
+
+        const file = item.file;
+
+        if(file.type.startsWith("image/")){
+
+            const base64 =
+                item.data.split(",")[1];
+
+            parts.push({
+                inlineData:{
+                    mimeType:file.type,
+                    data:base64
+                }
+            });
+
+        }else if(
+            file.type === "text/plain" ||
+            file.type === "application/json" ||
+            file.name.endsWith(".html") ||
+            file.name.endsWith(".css") ||
+            file.name.endsWith(".js") ||
+            file.name.endsWith(".py") ||
+            file.name.endsWith(".md")
+        ){
+
+            const textData =
+                await file.text();
+
+            parts.push({
+                text:
+                `\n\nفایل ${file.name}:\n${textData}`
+            });
+
+        }else if(file.type === "application/pdf"){
+
+            const base64 =
+                item.data.split(",")[1];
+
+            parts.push({
+                inlineData:{
+                    mimeType:"application/pdf",
+                    data:base64
+                }
+            });
+
+        }
+
+    }
+
+
+    const body = {
+
+        contents:[
+            {
+                role:"user",
+                parts:parts
+            }
+        ],
+
+        generationConfig:{
+            maxOutputTokens:8192
+        }
+
+    };
+
+
+    const response =
+        await fetch(API_URL,{
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify(body)
+        });
+
+
+    const data =
+        await response.json();
+
+
+    if(!response.ok){
+
+        throw new Error(
+            data?.error?.message ||
+            "Gemini API request failed"
+        );
+
+    }
+
+
+    const answer =
+        data?.candidates?.[0]?.content?.parts
+        ?.map(p => p.text || "")
+        .join("") || "";
+
+
+    if(!answer){
+
+        throw new Error(
+            "پاسخی از Gemini دریافت نشد."
+        );
+
+    }
+
+
+    return answer;
+
+}
+
+
+/* =====================================================
+   TYPING
+   ===================================================== */
+
+function addTyping(){
+
+    const wrapper =
+        document.createElement("div");
+
+    wrapper.className = "message ai";
+
+    wrapper.innerHTML = `
+        <div class="bubble">
+            <div class="typing">
+                <i></i>
+                <i></i>
+                <i></i>
+            </div>
+        </div>
+    `;
+
+    chat.appendChild(wrapper);
+
+    scrollBottom();
+
+    return wrapper;
+
+}
+
+
+/* =====================================================
+   NEW CHAT
+   ===================================================== */
+
+newChat.onclick = () => {
+
+    newConversation();
+
+};
+
+
+function newConversation(){
+
+    messages = [];
+
+    attachedFiles = [];
+
+    currentChatId = null;
+
+    renderAttachments();
+
+    renderMessages();
+
+    closeDrawer();
+
+}
+
+
+/* =====================================================
+   DRAWER
+   ===================================================== */
+
+menuBtn.onclick = () => {
+
+    drawer.classList.add("open");
+
+    overlay.classList.add("open");
+
+    renderHistory();
+
+};
+
+
+overlay.onclick = closeDrawer;
+
+
+function closeDrawer(){
+
+    drawer.classList.remove("open");
+
+    overlay.classList.remove("open");
+
+}
+
+
+historySearch.oninput = () => {
+
+    renderHistory(
+        historySearch.value.trim()
+    );
+
+};
+
+
+clearHistory.onclick = deleteAllHistory;
+
+
+/* =====================================================
+   SETTINGS
+   ===================================================== */
+
+function openSettings(){
+
+    settings.classList.add("open");
+
+}
+
+
+function closeSettingsPage(){
+
+    settings.classList.remove("open");
+
+}
+
+
+closeSettings.onclick =
+    closeSettingsPage;
+
+
+/* Long press on logo opens settings */
+
+document.querySelector(".logo").onclick =
+    openSettings;
+
+
+/* =====================================================
+   HELPERS
+   ===================================================== */
+
+function scrollBottom(){
+
+    requestAnimationFrame(() => {
+
+        chat.scrollTop =
+            chat.scrollHeight;
+
+    });
+
+}
+
+
+function escapeHTML(str){
+
+    return String(str)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+
+}
+
+
+/* =====================================================
+   START
+   ===================================================== */
+
+renderHistory();
+
+renderMessages();
+
+</script>
+
+</body>
+  </html>
